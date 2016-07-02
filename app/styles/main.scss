@@ -1,0 +1,39 @@
+body {
+    height: initial;
+    background-color: #222;
+    color: #fff;
+}
+
+header {
+    h1 {
+        margin: 0 auto;
+        text-align: center;
+    }
+}
+
+a[role="button"] {
+    text-decoration: none;
+}
+
+.content {
+    max-width: 960px;
+    margin: 0 auto;
+}
+
+.fade-in {
+    opacity: 0;
+    transition: opacity 300ms ease;
+    &.is-in {
+        opacity: 1;
+    }
+}
+
+.story {
+    &:hover {
+        background-color: #efefef;
+    }
+}
+
+.hacker-news-app .custom-tabs {
+    min-height: 75vh;
+}
