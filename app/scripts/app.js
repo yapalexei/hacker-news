@@ -9,12 +9,7 @@
  * Main module of the application.
  */
 angular
-  .module('hnApp', [
-    'ngAnimate',
-    'ngResource',
-    'ngSanitize',
-    'ngTouch',
-    'firebase',
-    'ngMaterial',
-    'ngFx'
-  ]);
+    .module('hnApp', [
+        'ngSanitize',
+        'firebase',
+    ]);

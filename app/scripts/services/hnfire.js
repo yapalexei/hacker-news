@@ -7,12 +7,12 @@
  * # HnFire
  * Service that fetches Hacker News data using firebase sdk.
  */
-angular.module('hnApp')
-    .service('HnFire', ['$q', 'Firebase', '$firebaseArray', '$firebaseObject', function ($q, Firebase, $firebaseArray, $firebaseObject) {
+angular.module('hnApp').service('HnFire', ['Firebase', '$firebaseArray', '$firebaseObject',
+    function (Firebase, $firebaseArray, $firebaseObject) {
         if (!Firebase) { throw 'Firebase is not loaded'; }
 
-        var me = this;
-        const props = {
+        var me = this,
+        props = {
             rootPath: 'https://hacker-news.firebaseio.com/v0/',
             storyTypes: {
                 top:    'topstories',
@@ -22,29 +22,12 @@ angular.module('hnApp')
                 show:   'showstories',
                 job:    'jobstories',
             },
-        };
-        var dataCache = {
+        },
+        dataCache = {
             story: {},
             item: {},
             stories: []
         };
-
-        // function loadKids(itemObj) {
-        //     itemObj.$loaded(function(obj) {
-        //         if(!itemObj.kidObjs) { itemObj.kidObjs = {}; }
-        //         if(obj.kids && obj.kids.length) {
-        //             for(var i = 0; i < obj.kids.length; i++) {
-        //                 itemObj.kidObjs[obj.kids[i]] = loadKid(obj.kids[i]);
-        //             }
-        //         }
-        //     });
-        // }
-
-        // function loadKid(id) {
-        //     var kidRef = new Firebase(props.rootPath + 'item/' + id);
-        //     var kidObj = $firebaseObject(kidRef);
-        //     return kidObj;
-        // }
 
         me.getItem = function (id) {
             if (!id) { return; }
@@ -68,21 +51,22 @@ angular.module('hnApp')
 
             if (!dataCache.story[type]) {
                 var storyRef = new Firebase(props.rootPath + props.storyTypes[type]);
-                storyRef.limitToLast(25); // supposed to work but doesn't
+                storyRef.limitToLast(25); // limitToLast supposed to work but doesn't
                 dataCache.story[type] = {
                     ref: storyRef,
-                    ary: $firebaseArray(storyRef),
+                    ids: $firebaseArray(storyRef),
+                    items: []
                 };
             }
 
-            return dataCache.story[type].ary;
+            return dataCache.story[type].ids;
         };
 
         me.getStories = function (type) {
             var idList = me.getStoryIds(type);
             idList.$loaded(function(data) {
                 for(var i = 0; i < data.length; i++) {
-                    me.getItem(data[i].$value);
+                    dataCache.story[type].items.push(me.getItem(data[i].$value));
                 }
             });
 

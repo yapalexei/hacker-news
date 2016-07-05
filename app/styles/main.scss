@@ -1,39 +1,202 @@
+$speed: 500ms;
+$animCurve: cubic-bezier(0.8, 0.01, 0.34, 1);
+
 body {
     height: initial;
     background-color: #222;
     color: #fff;
+    font-family: arial;
+    padding: 0;
+    margin: 0;
 }
-
 header {
-    h1 {
-        margin: 0 auto;
+    padding-top: 22vh;
+    transition: padding-top $speed $animCurve;
+    &.active {
+        padding-top: 0vh;
+        > * {
+            font-size: 1.5em;
+            span {
+                opacity: 0;
+                width: 0;
+                display: inline-block;
+            }
+        }
+    }
+
+    > * {
+        margin: 0;
+        font-size: 2.5em;
         text-align: center;
+        transition: all $speed $animCurve 250ms;
+        span {
+            display: inline-block;
+            width: 40px;
+            font-size: 1.1rem;
+            transition: all $speed $animCurve 250ms;
+        }
     }
 }
 
-a[role="button"] {
-    text-decoration: none;
+/* utility classes */
+.text-uppercase {
+    text-transform: uppercase;
 }
-
-.content {
-    max-width: 960px;
-    margin: 0 auto;
+.text-capitalize {
+    text-transform: capitalize;
 }
-
-.fade-in {
-    opacity: 0;
-    transition: opacity 300ms ease;
-    &.is-in {
+[role="button"] {
+    cursor: pointer;
+}
+/* end utility classes */
+@-webkit-keyframes expand {
+    0% {
+        opacity: 0;
+    }
+    100% {
         opacity: 1;
     }
 }
+@keyframes fade-in {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1
+    }
+}
+.delayed-fade {
+    display: inline-block;
+    overflow: hidden;
+    animation: fade-in 3s;
+    // animation-delay: 1s;
+}
 
-.story {
-    &:hover {
-        background-color: #efefef;
+.main-container {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+}
+
+.content {
+    max-width: 767px;
+    margin: 0 auto;
+}
+
+.tabbed-container {
+    padding-top: 50vh;
+    transition: padding-top $speed $animCurve;
+    &.active {
+        padding-top: 4vh;
+        white-space: nowrap;
+        .tab {
+            &:not(.active) {
+                color: transparent;
+                width: 0%;
+                white-space: nowrap;
+                overflow: hidden;
+            }
+        }
+    }
+    .tab {
+        display: inline-block;
+        white-space: nowrap;
+        width: 100px;
+        transition: width $speed $animCurve,
+                    max-width $speed $animCurve,
+                    border-bottom $speed $animCurve 200ms,
+                    border-bottom-color $speed $animCurve 200ms;
+        &.active {
+            white-space: nowrap;
+            width: 100%;
+            .tab-body {
+                height: auto;
+                margin: 0 auto;
+                > * {
+                    opacity: 1;
+                    transition-delay: 1000ms;
+                    display: block;
+                }
+            }
+        }
+        .tab-label {
+            display: inline-block;
+            padding: 20px 10px;
+            &:hover {
+                border-bottom: 1px solid white;
+                margin-bottom: -1px;
+            }
+        }
+        .tab-body {
+            text-align: left;
+            max-width: 767px;
+            white-space: initial;
+            height: 0px;
+            overflow: hidden;
+            transition: height $speed $animCurve 500ms,
+                        padding $speed $animCurve 500ms;
+            background-color: #eee;
+            color: #333;
+            > * {
+                opacity: 0;
+                display: none;
+                transition: opacity $speed ease 1100ms;
+            }
+        }
     }
 }
 
-.hacker-news-app .custom-tabs {
-    min-height: 75vh;
+.stories {
+    .story {
+        padding: 30px 30px;
+        transition: all 500ms ease;
+        transform: scale(1);
+        line-height: 20px;
+        word-spacing: 3px;
+        letter-spacing: 0px;
+        text-rendering: geometricPrecision;
+        &:hover {
+            position: relative;
+            background-color: white;
+            z-index: 1000;
+        }
+
+        &:nth-child(even) {
+            background-color: #ddd;
+            &:hover {
+                background-color: #d8d8d8;
+            }
+        }
+
+        a {
+            text-decoration: none;
+            color: #000;
+        }
+
+        h3, h4 {
+            margin-top: 0;
+        }
+
+        h3 {
+            font-size: 25px;
+            font-weight: 100;
+            text-transform: capitalize;
+        }
+
+        h4 {
+            font-style: italic;
+            font-size: 14px;
+            color: #555;
+        }
+
+        p {
+            font-size: 13px;
+            word-spacing: 2px;
+            letter-spacing: 0.5px;
+            line-height: 1.3em;
+            text-rendering: geometricPrecision;
+        }
+    }
 }

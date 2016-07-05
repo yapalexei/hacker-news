@@ -8,60 +8,49 @@
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
     <!-- build:css(.) styles/vendor.css -->
     <!-- bower:css -->
-    <link rel="stylesheet" href="bower_components/angular-material/angular-material.css" />
     <!-- endbower -->
     <!-- endbuild -->
     <!-- build:css(.tmp) styles/main.css -->
     <link rel="stylesheet" href="styles/main.css">
     <!-- endbuild -->
   </head>
-  <body ng-app="hnApp">
+  <body ng-app="hnApp" ng-controller="MainCtrl as Main" class="hacker-news-app">
     <!--[if lt IE 7]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
-    <header>
-        <h1>Search Hacker News</h1>
+    <header class="content" ng-class="{'active': Main.currentIndex >= 0}">
+        <h1>H<span>acker</span> N<span>ews</span></h1>
     </header>
-    <div ng-controller="MainCtrl as Main" class="hacker-news-app content">
-        <section>
-            <md-content>
-                <md-tabs class="md-accent custom-tabs" md-selected="Main.currentIndex" md-align-tabs="{{data.bottom ? 'bottom' : 'top'}}" >
-                    <md-tab id="tab{{$index+1}}" ng-repeat="storyType in Main.storyTypes">
-                        <md-tab-label>{{storyType}} Story {{Main.currentIndex}}</md-tab-label>
-                        <md-tab-body>
-                            <md-progress-circular md-mode="indeterminate" ng-show="Main.fetching"></md-progress-circular>
-                            <md-list class="stories">
-                                <md-list-item class="md-3-line story" ng-repeat="story in Main.stories[me.storyTypes[$index]]" ng-init="Main.last = $last" >
-                                    <a role="button" target="_blank" href="{{story.url}}" class="md-list-item-text fade-in" layout="column" ng-class="{'is-in': story.title}" style="transition-delay: {{$index * 250+'ms'}}">
-                                        <h3 ng-bind="story.title"></h3>
-                                        <h4>by <span ng-bind="story.by"></span></h4>
-                                        <p ng-bind="story.time*1000 | date"></p>
-                                    </a>
-                                </md-list-item>
-                            </md-list>
-                        </md-tab-body>
-                    </md-tab>
-                </md-tabs>
-            </md-content>
-        </section>
-    </div>
 
+    <section class="main-container">
+        <div class="tabbed-container" ng-class="{'active': Main.currentIndex >= 0}">
+            <div class="tab" ng-class="{'active': Main.currentIndex === $index}" id="tab{{$index+1}}" ng-repeat="storyType in Main.storyTypes">
+                <div role="button" class="tab-label text-capitalize" ng-click="Main.selectStories($index)" ng-bind="storyType + ' story'"></div>
+                <div class="tab-body">
+                    <div class="stories">
+                        <div class="story" ng-repeat="story in Main.stories[Main.storyTypes[$index]].items" ng-init="Main.last = $last">
+                            <a ng-if="story.url" role="button" target="_blank" href="{{story.url}}" class="delayed-fade" ng-class="{'is-in': story.title}" style="transition-delay: {{$index * 250+'ms'}}">
+                                <h3 ng-bind="story.title"></h3>
+                                <p ng-bind="story.time*1000 | date"></p>
+                                <h4 ng-bind="'by ' + story.by"></h4>
+                            </a>
+                            <div ng-if="!story.url" class="delayed-fade" ng-class="{'is-in': story.title}" style="transition-delay: {{$index * 250+'ms'}}">
+                                <h3 ng-bind="story.title"></h3>
+                                <p class="story-text" ng-if="story.text" ng-bind-html="story.text"></p>
+                                <p ng-bind="story.time*1000 | date"></p>
+                                <h4 ng-bind="'by ' + story.by"></h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
     <!-- build:js(.) scripts/vendor.js -->
     <!-- bower:js -->
     <script src="bower_components/angular/angular.js"></script>
-    <script src="bower_components/angular-animate/angular-animate.js"></script>
-    <script src="bower_components/angular-resource/angular-resource.js"></script>
     <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
-    <script src="bower_components/angular-touch/angular-touch.js"></script>
-    <script src="bower_components/firebase/firebase.js"></script>
-    <script src="bower_components/angularfire/dist/angularfire.js"></script>
-    <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
-    <script src="bower_components/angular-aria/angular-aria.js"></script>
-    <script src="bower_components/angular-messages/angular-messages.js"></script>
-    <script src="bower_components/angular-material/angular-material.js"></script>
-    <script src="bower_components/gsap/src/uncompressed/TweenMax.js"></script>
-    <script src="bower_components/ngFx/dist/ngFx.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
     <script src="https://cdn.firebase.com/js/client/2.2.4/firebase.js"></script>
@@ -71,8 +60,6 @@
         <script src="scripts/controllers/main.js"></script>
         <script src="scripts/services/hnfire.js"></script>
         <script src="scripts/services/firebase.js"></script>
-        <script src="scripts/directives/on-last-item.js"></script>
-        <script src="scripts/directives/unbind.js"></script>
         <!-- endbuild -->
 </body>
 </html>
